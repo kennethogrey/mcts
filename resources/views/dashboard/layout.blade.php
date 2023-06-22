@@ -183,7 +183,7 @@
                                         <img class="img-80 img-radius" src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" alt="{{ auth()->user()->name }}">
                                     </div>
                                 </div>
-                                <div class="p-15 p-b-0">
+                                {{--  <div class="p-15 p-b-0">
                                     <form class="form-material">
                                         <div class="form-group form-primary">
                                             <input type="text" name="footer-email" class="form-control">
@@ -191,7 +191,7 @@
                                             <label class="float-label"><i class="fa fa-search m-r-10"></i>Search Child</label>
                                         </div>
                                     </form>
-                                </div>
+                                </div>  --}}
                                 <div class="pcoded-navigation-label">Navigation</div>
                                 <ul class="pcoded-item pcoded-left-item">
                                     @if( auth()->user()->role == 2)
@@ -203,13 +203,6 @@
                                             </a>
                                         </li>
                                     @endif
-                                    <li class="">
-                                        <a href="{{ route('my.location') }}" class="waves-effect waves-dark">
-                                            <span class="pcoded-micon"><i class="ti-map-alt"></i></span>
-                                            <span class="pcoded-mtext">My Location</span>
-                                            <span class="pcoded-mcaret"></span>
-                                        </a>
-                                    </li>
                                 </ul>
 
                                 @if( auth()->user()->role != 0 )
@@ -226,13 +219,6 @@
                                                     <a href="{{route('device.index')}}" class="waves-effect waves-dark">
                                                         <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
                                                         <span class="pcoded-mtext">Registered Devices</span>
-                                                        <span class="pcoded-mcaret"></span>
-                                                    </a>
-                                                </li>
-                                                <li class=" ">
-                                                    <a href="typography.html" class="waves-effect waves-dark">
-                                                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                        <span class="pcoded-mtext">Typography</span>
                                                         <span class="pcoded-mcaret"></span>
                                                     </a>
                                                 </li>
@@ -264,27 +250,10 @@
                                                         <span class="pcoded-mcaret"></span>
                                                     </a>
                                                 </li>
-                                                <li class=" ">
-                                                    <a href="typography.html" class="waves-effect waves-dark">
-                                                        <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
-                                                        <span class="pcoded-mtext">Typography</span>
-                                                        <span class="pcoded-mcaret"></span>
-                                                    </a>
-                                                </li>
                                             </ul>
                                         </li>
                                     </ul>
                                 @endif
-                                <div class="pcoded-navigation-label">Reviews</div>
-                                <ul class="pcoded-item pcoded-left-item">
-                                    <li class="">
-                                        <a href="form-elements-component.html" class="waves-effect waves-dark">
-                                            <span class="pcoded-micon"><i class="ti-layers"></i></span>
-                                            <span class="pcoded-mtext">Feedbacks</span>
-                                            <span class="pcoded-mcaret"></span>
-                                        </a>
-                                    </li>
-                                </ul>
                             </div>
                         </nav>
                     <div class="pcoded-content">
