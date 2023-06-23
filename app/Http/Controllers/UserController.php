@@ -8,6 +8,8 @@ use App\Models\User;
 use File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\UserCredentials;
 
 class UserController extends Controller
 {
@@ -55,6 +57,7 @@ class UserController extends Controller
         }
         //calling function to autogenerate a strong password
         $password = $this->generateStrongPassword(12);
+
         //create new user
         User::create([
             'name' => $request['name'],
@@ -65,6 +68,12 @@ class UserController extends Controller
             'password' => Hash::make($password),
         ]);
         
+
+        //Send an Email which includes the UserCredentials
+        $name = $request['name'];
+        $user = User::latest()->first();
+        $this->sendUserCredentials($user, $password);
+
         return redirect()->route('users.index')->with('status','User Added Successfully');
     }
 
@@ -143,5 +152,24 @@ class UserController extends Controller
             $strongPassword .= $characters[rand(0, $characterCount - 1)];
         }
         return $strongPassword;
+    }
+
+    public function sendUserCredentials($user, $password)
+    {
+        //Mail Notification
+        $userCreatedNow = [
+            'body' => 'User Credentials From MCTS
+                Hello '.$user->name.', Your Accout has been Created Successfully.
+                To login use the credentials below.
+                Email: '.$user->email.'
+                Password: '.$password,
+                
+            'message' => 'Go to login',
+            'url' => url('/login'),
+            'thankyou' => 'Welcome to MCTS. Bye bye to worring about your child.'
+        ];
+        Notification::sendNow($user, new UserCredentials($userCreatedNow));
+
+        return;
     }
 }

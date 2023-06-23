@@ -96,8 +96,8 @@
                     </tbody>
                 </table>
             </div>
-            <div class="pagination justify-content-center"> {{-- Add 'justify-content-center' class --}}
-                {{ $all_users->links('pagination::bootstrap-4') }} {{-- Use bootstrap-4 pagination style --}}
+            <div class="pagination justify-content-center">
+                {{ $all_users->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </div>
