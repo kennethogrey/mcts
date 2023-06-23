@@ -119,7 +119,7 @@
                         </div>
                         <div class="navbar-container container-fluid">
                             <ul class="nav-right">
-                                @if( auth()->user()->role == 2)
+                                {{--  @if( auth()->user()->role == 2)
                                     <li class="header-notification">
                                         <a class="waves-effect waves-light">
                                             <i class="ti-bell"></i>
@@ -142,7 +142,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                @endif
+                                @endif  --}}
                                 <li class="user-profile header-notification">
                                     <a class="waves-effect waves-light">
                                         <img src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" class="img-radius" height="40">

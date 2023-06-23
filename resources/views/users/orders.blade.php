@@ -79,6 +79,9 @@
                     </tbody>
                 </table>
             </div>
+            <div class="pagination justify-content-center"> {{-- Add 'justify-content-center' class --}}
+                {{ $orders->links('pagination::bootstrap-4') }} {{-- Use bootstrap-4 pagination style --}}
+            </div>
         </div>
     </div>
 </div>

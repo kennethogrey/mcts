@@ -53,6 +53,7 @@ Route::middleware([
     'verified'
 ])->group(function () {
     Route::get('/dashboard', function () {
+        $devices = DB::table("devices")->count();
         $session_count = DB::table('sessions')->count();
         $unique_vistors = Visitor::where('visited_date', '>=', Carbon::now()->subDays(2))->count();
         $user_count = DB::table('users')->count();
@@ -60,7 +61,7 @@ Route::middleware([
         //Active users
         $users_in_session = DB::table('sessions')->value('user_id');
         $registered_users = DB::table('users')->where('id',$users_in_session)->get();
-        return view('dashboard.dashboard', compact('session_count','unique_vistors','user_count','registered_users','user_orders'));
+        return view('dashboard.dashboard', compact('session_count','unique_vistors','user_count','registered_users','user_orders','devices'));
     })->name('dashboard');
 
 

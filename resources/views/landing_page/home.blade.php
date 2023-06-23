@@ -8,7 +8,7 @@
       <div class="row justify-content-between">
         <div class="col-lg-7 pt-5 pt-lg-0 order-2 order-lg-1 d-flex align-items-center">
           <div data-aos="zoom-out">
-            <h1>Track your child's locations with <span>Miniature Child Tracking System (MCTS)</span> in REAL TIME</h1>
+            <h1>Track your child's location with the <span>Miniature Child Tracking System (MCTS)</span> in REAL TIME</h1>
             <h2>Our team is dedicated to combatting child trafficking in Africa by implementing sustainable solutions.</h2>
             <div class="text-center text-lg-start">
               <a href="#order" class="btn-get-started scrollto">Get Started</a>
@@ -357,7 +357,7 @@
               <div class="alert alert-Danger">
                   {{ __('No Admin Available') }}
               </div>
-            @endforelse 
+            @endforelse
 
         </div>
 

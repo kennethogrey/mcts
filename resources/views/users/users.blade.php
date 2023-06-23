@@ -8,6 +8,10 @@
     <div class="card">
         <div class="card-header">
             <h5>Users Table</h5>
+            <a class="btn waves-effect waves-light btn-success" href="{{route('users.create')}}">
+                <i class="fas fa-pencil-alt"></i>
+                Add User
+            </a> 
             <span>These are users who can log in to the system</span>
             @if(session('status'))
                 <div class="alert alert-success">
@@ -81,12 +85,19 @@
                                 </td>
                             </tr>
                         @empty
-                            <div class="alert alert-Danger">
-                                {{ __('No User Available') }}
-                            </div>
+                            <tr>
+                                <td colspan="11">
+                                    <div class="alert alert-danger">
+                                        {{ __('No User Available') }}
+                                    </div>
+                                </td>
+                            </tr>
                         @endforelse  
                     </tbody>
                 </table>
+            </div>
+            <div class="pagination justify-content-center"> {{-- Add 'justify-content-center' class --}}
+                {{ $all_users->links('pagination::bootstrap-4') }} {{-- Use bootstrap-4 pagination style --}}
             </div>
         </div>
     </div>

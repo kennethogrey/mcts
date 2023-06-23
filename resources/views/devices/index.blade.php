@@ -90,6 +90,9 @@
                     </table>
                 </div>
             </div>
+            <div class="pagination justify-content-center"> {{-- Add 'justify-content-center' class --}}
+                {{ $all_devices->links('pagination::bootstrap-4') }} {{-- Use bootstrap-4 pagination style --}}
+            </div>
         </div>
     </div> 
 @elseif(auth()->user()->status==1 && auth()->user()->role==1)
@@ -161,8 +164,14 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="pagination justify-content-center"> {{-- Add 'justify-content-center' class --}}
+                    {{ $all_devices->links('pagination::bootstrap-4') }} {{-- Use bootstrap-4 pagination style --}}
+                </div>
+
             </div>
+            
         </div>
+        
     </div>  
 @else
     <div class="pcoded-inner-content">

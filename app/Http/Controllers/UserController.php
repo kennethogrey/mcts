@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\User;
 use File;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -16,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $all_users = DB::table('users')->get();
+        $all_users = DB::table('users')->latest()->paginate(5);
         return view('users.users',compact('all_users'));
     }
 
@@ -27,7 +29,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view("users.create");
     }
 
     /**
@@ -38,7 +40,32 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string'],
+            'contact' => ['required', 'integer', 'min:10'],
+            'role'=>'required',
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+        //calling function to autogenerate a strong password
+        $password = $this->generateStrongPassword(12);
+        //create new user
+        User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'contact' => $request['contact'],
+            'role'=>$request['role'],
+            'location' => $request['location'],
+            'password' => Hash::make($password),
+        ]);
+        
+        return redirect()->route('users.index')->with('status','User Added Successfully');
     }
 
     /**
@@ -102,5 +129,19 @@ class UserController extends Controller
         }
         $user_delete = DB::table('users')->where('id',$id)->delete();
         return redirect()->back()->with('status', 'The User Has Been Deleted Successfully');
+    }
+
+    function generateStrongPassword($length = 12) {
+        // Define the characters to be used in the password
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|';
+        // Get the total number of characters
+        $characterCount = strlen($characters);
+        // Initialize the password variable
+        $strongPassword = '';
+        // Generate random characters to form the password
+        for ($i = 0; $i < $length; $i++) {
+            $strongPassword .= $characters[rand(0, $characterCount - 1)];
+        }
+        return $strongPassword;
     }
 }

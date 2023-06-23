@@ -71,7 +71,7 @@ class StatisticsController extends Controller
 
     public function device_orders()
     {
-        $orders = Order::where('status',0)->get();
+        $orders = Order::where('status',0)->latest()->paginate(5);
         return view('users.orders',compact('orders'));
     }
 

@@ -12,29 +12,14 @@
                         <div class="row">
                             <!-- Material statustic card start -->
                             <div class="col-xl-3 col-md-12">
-                                <a href="#">
-                                    <div class="card mat-stat-card" style="height: 85%;">
-                                        <div class="card-block d-flex align-items-center justify-content-center"
-                                            style="height: 100%;">
-                                            <div class="text-center my-2">
-                                                <i class="far fa-user text-c-purple f-30"></i>
-                                                <h5 style="font-size: 24px;">{{ $unique_vistors }}</h5>
-                                                <a href="#" class="text-muted m-b-0" style="font-size: 16px;">New
-                                                    Visitors</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-3 col-md-12">
-                                <a href="#">
+                                <a href="{{route('users.index')}}">
                                     <div class="card mat-stat-card" style="height: 85%;">
                                         <div class="card-block d-flex align-items-center justify-content-center"
                                             style="height: 100%;">
                                             <div class="text-center my-2">
                                                 <i class="far fa-user text-c-purple f-30"></i>
                                                 <h5 style="font-size: 24px;">{{ $user_count }}</h5>
-                                                <a href="#" class="text-muted m-b-0" style="font-size: 16px;">Users</a>
+                                                <a href="{{route('users.index')}}" class="text-muted m-b-0" style="font-size: 16px;">Users</a>
                                             </div>
                                         </div>
                                     </div>
@@ -42,14 +27,28 @@
                             </div>
 
                             <div class="col-xl-3 col-md-12">
-                                <a href="#">
+                                <a href="{{ route('device.index') }}">
+                                    <div class="card mat-stat-card" style="height: 85%;">
+                                        <div class="card-block d-flex align-items-center justify-content-center"
+                                            style="height: 100%;">
+                                            <div class="text-center my-2">
+                                                <i class="far fa-hdd text-c-purple f-30"></i>
+                                                <h5 style="font-size: 24px;">{{ $devices }}</h5>
+                                                <a href="{{route('device.index')}}" class="text-muted m-b-0" style="font-size: 16px;">Registered Devices</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-xl-3 col-md-12">
+                                <a href="{{route('user.orders')}}">
                                     <div class="card mat-stat-card" style="height: 85%;">
                                         <div class="card-block d-flex align-items-center justify-content-center"
                                             style="height: 100%;">
                                             <div class="text-center my-2">
                                                 <i class="far fa-file-alt text-c-red f-30"></i>
                                                 <h5 style="font-size: 24px;">{{ $user_orders }}</h5>
-                                                <a href="#" class="text-muted m-b-0" style="font-size: 16px;">New Orders</a>
+                                                <a href="{{route('user.orders')}}" class="text-muted m-b-0" style="font-size: 16px;">New Orders</a>
                                             </div>
                                         </div>
                                     </div>
@@ -65,7 +64,7 @@
                                             <div class="text-center my-2">
                                                 <i class="far fa-user text-c-purple f-30"></i>
                                                 <h5 style="font-size: 24px;">{{ $session_count }}</h5>
-                                                <a href="#" class="text-muted m-b-0" style="font-size: 16px;">Sessions</a>
+                                                <a href="#" class="text-muted m-b-0" style="font-size: 16px;">Traffic</a>
                                             </div>
                                         </div>
                                     </div>
