@@ -83,46 +83,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--  sale analytics start -->
-                            {{--  <div class="col-xl-6 col-md-12">
-                                <div class="card table-card">
-                                    <div class="card-header">
-                                        <h5>Active Users</h5>
-                                    </div>
-                                    <div class="card-block">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover m-b-0 without-header">
-                                                <tbody>
-                                                @forelse($registered_users as $user)
-                                                    <tr>
-                                                        <td>
-                                                            <div class="d-inline-block align-middle">
-                                                                <img src="assets/images/avatar-4.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
-                                                                <div class="d-inline-block">
-                                                                    <h6>{{ $user->name }}</h6>
-                                                                    <p class="text-muted m-b-0">{{ $user->location }}</p>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-right">
-                                                            <h6 class="f-w-700">@if ($user->role == 1){{__('Normal User')}} @elseif($user->role == 2) {{__('Administrator')}} @else{{('No Role')}} @endif<i class="fas fa-level-up-alt text-c-green m-l-10"></i></h6>
-                                                        </td>
-                                                    </tr>
-                                                @empty
-                                                    <div class="d-inline-block align-middle">
-                                                        <img src="assets/images/avatar-4.jpg" alt="user image" class="img-radius img-40 align-top m-r-15">
-                                                        <div class="d-inline-block">
-                                                            <h6>{{ ('None is active') }}</h6>
-                                                        </div>
-                                                    </div>
-                                                @endforelse
-                                                </tbody>
-                                            </table>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>  --}}
                         </div>
                     </div>
                     <!-- Page-body end -->

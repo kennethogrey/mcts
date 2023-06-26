@@ -89,4 +89,9 @@ class StatisticsController extends Controller
         //dd($currentUserInfo);
         return view('leaflet_maps.mylocation',compact('currentUserInfo'));
     }
+
+    public function fileMap($file)
+    {
+        return view('devices.filemap', compact('file'));
+    }
 }

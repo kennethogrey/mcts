@@ -68,6 +68,7 @@ Route::middleware([
     //User Management
     //Route::get('/registered/users', [StatisticsController::class, 'all_users'])->name('registered_users');
     Route::resource('users',UserController::class);
+
     Route::get('/activate/user/{id}', [StatisticsController::class, 'activate_user'])->name('users.activate');
     Route::put('/profile-photo/user', [StatisticsController::class, 'user_photo'])->name('user.photo');
 
@@ -85,6 +86,7 @@ Route::middleware([
     Route::post('/device/geofence', [MapsController::class, 'sendNotification'])->name('geofence.alert');
     Route::post('/send-sms', [MapsController::class, 'sendSMS'])->name('send.sms');
     Route::post('/devices/location', [MapsController::class, 'updateDeviceCoordinates'])->name('device.location');
+    Route::get('/map/file/{file}', [StatisticsController::class, 'fileMap'])->where('file', '.*')->name('map.file');
     //test route
     //Route::get('/dev/location', [MapsController::class, 'updateDeviceCoordinates'])->name('dev.location');
 

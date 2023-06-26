@@ -33,6 +33,7 @@
         <!-- Style.css -->
         <link rel="stylesheet" type="text/css" href="{{asset('assets/css/style.css')}}">
         @yield('styles')
+        @livewireStyles
     </head>
 
     <body>
@@ -145,7 +146,7 @@
                                 @endif  --}}
                                 <li class="user-profile header-notification">
                                     <a class="waves-effect waves-light">
-                                        <img src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" class="img-radius" height="40">
+                                        <img src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" class="img-radius" style="width: 40px; height: 40px; border-radius: 50%;">
                                         <span>{{ auth()->user()->name }}</span>
                                         <i class="ti-angle-down"></i>
                                     </a>
@@ -180,7 +181,7 @@
                             <div class="pcoded-inner-navbar main-menu">
                                 <div class="">
                                     <div class="main-menu-header">
-                                        <img class="img-80 img-radius" src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" alt="{{ auth()->user()->name }}">
+                                        <img class="img-80 img-radius" style="width: 60px; height: 60px; border-radius: 50%;" src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" alt="{{ auth()->user()->name }}">
                                     </div>
                                 </div>
                                 {{--  <div class="p-15 p-b-0">
@@ -282,5 +283,6 @@
         <script src="{{asset('assets/js/vertical/vertical-layout.min.js ')}}"></script>
         <script type="text/javascript" src="{{asset('assets/js/script.js')}} "></script>
         @stack('scripts')
+        @livewireScripts
     </body>
 </html>

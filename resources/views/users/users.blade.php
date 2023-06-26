@@ -18,15 +18,15 @@
                     {{ session('status') }}
                 </div>
             @endif
-            <div class="card-header-right">
-                <ul class="list-unstyled card-option">
-                    <li><i class="fa fa fa-wrench open-card-option"></i></li>
-                    <li><i class="fa fa-window-maximize full-card"></i></li>
-                    <li><i class="fa fa-minus minimize-card"></i></li>
-                    <li><i class="fa fa-refresh reload-card"></i></li>
-                    <li><i class="fa fa-trash close-card"></i></li>
-                </ul>
-            </div>
+            {{--  <div class="p-15 p-b-0">
+                <form method="post" action="" class="form-material">
+                    <div class="form-group form-primary">
+                        <input type="text" id="search" class="form-control">
+                        <span class="form-bar"></span>
+                        <label class="float-label"><i class="fa fa-search m-r-10"></i>Search Child</label>
+                    </div>
+                </form>
+            </div>  --}}
         </div>
         <div class="card-block table-border-style">
             <div class="table-responsive">

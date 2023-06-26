@@ -31,27 +31,24 @@ crossorigin=""></script>
                             @endphp
                             <div class="col-lg-12 col-xl-4">
                                 <!-- Basic map start -->
-                                <div class="card">
-                                    <div class="card-block">
-                                        <!-- Add a div with a unique ID for each map -->
-                                        <div id="map-{{ $device->id }}-{{ $fileNameWithoutExt }}" class="set-map"
-                                             style="height: 400px;"></div>
+                                <a href="{{route('map.file',$file)}}">
+                                    <div class="card">
+                                        <div class="card-block">
+                                            <!-- Add a div with a unique ID for each map -->
+                                            <div id="map-{{ $device->id }}-{{ $fileNameWithoutExt }}" class="set-map"
+                                                style="height: 200px;"></div>
+                                        </div>
+                                        <div class="card-header">
+                                            <h5>
+                                                {{ $fileNameWithoutExt }} on
+                                                @php
+                                                    $day = \Carbon\Carbon::parse($fileNameWithoutExt)->format('l');
+                                                @endphp
+                                                {{ $day }}
+                                            </h5>
+                                        </div>
                                     </div>
-                                    <div class="card-header">
-                                        <h5>Trip History
-                                            <a href="{{ asset('storage/TripHistories/'.$device->user.'/'.$device->id.'/'.$fileName) }}" download>Download File</a>
-                                        </h5>
-                                    </div>
-                                    <div>
-                                        <span>
-                                            for {{ $device->name }} as of {{ $fileNameWithoutExt }} on
-                                            @php
-                                                $day = \Carbon\Carbon::parse($fileNameWithoutExt)->format('l');
-                                            @endphp
-                                            {{ $day }}
-                                        </span>
-                                    </div>
-                                </div>
+                                </a>
                                 <!-- Basic map end -->
                             </div>
                             @push('scripts')
