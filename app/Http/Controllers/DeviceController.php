@@ -21,8 +21,7 @@ class DeviceController extends Controller
      */
     public function index()
     {
-        $all_devices = Device::with('userz')->latest()->paginate(5);
-        return view('devices.index',compact('all_devices'));
+        return view('devices.index');
     }
 
     /**

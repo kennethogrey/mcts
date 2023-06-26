@@ -70,4 +70,15 @@ class User extends Authenticatable
     {
         return $this->hasMany(Device::class);
     }
+
+    public function scopeSearch($query, $term)
+    {
+        $term = "%$term%";
+        $query->where(function ($query) use ($term) {
+            $query->where('name', 'like', $term)
+                ->orWhere('email', 'like', $term)
+                ->orWhere('location', 'like', $term)
+                ->orWhere('contact', 'like', $term);
+        });
+    }
 }

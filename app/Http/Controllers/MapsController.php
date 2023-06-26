@@ -113,8 +113,8 @@ class MapsController extends Controller
 
     public function updateDeviceCoordinates(Request $request)
     {
-        //$location_data = $request->input('device_location');
-        $location_data = '{"channel":{"id":2160030,"name":"gps","latitude":"0.0","longitude":"0.0","field1":"device_id","field2":"latitude","field3":"longitude","field4":"time","field5":"date","field6":"alertStatus","created_at":"2023-05-23T12:27:28Z","updated_at":"2023-05-31T14:06:08Z","last_entry_id":149},"feeds":[{"created_at":"2023-05-31T15:03:01Z","entry_id":148,"field1":"3","field2":"0.33158982","field3":"32.57056000","field4":"18:1:39","field5":"31-5-2023","field6":"1"},{"created_at":"2023-05-31T15:04:33Z","entry_id":149,"field1":"1","field2":"0.33158982","field3":"32.57056000","field4":"18:3:11","field5":"31-5-2023","field6":"0"}]}';
+        $location_data = $request->input('device_location');
+        //$location_data = '{"channel":{"id":2160030,"name":"gps","latitude":"0.0","longitude":"0.0","field1":"device_id","field2":"latitude","field3":"longitude","field4":"time","field5":"date","field6":"alertStatus","created_at":"2023-05-23T12:27:28Z","updated_at":"2023-05-31T14:06:08Z","last_entry_id":149},"feeds":[{"created_at":"2023-05-31T15:03:01Z","entry_id":148,"field1":"3","field2":"0.33158982","field3":"32.57056000","field4":"18:1:39","field5":"31-5-2023","field6":"1"},{"created_at":"2023-05-31T15:04:33Z","entry_id":149,"field1":"1","field2":"0.33158982","field3":"32.57056000","field4":"18:3:11","field5":"31-5-2023","field6":"0"}]}';
         $jsonData = json_decode($location_data, true);
         $feeds = $jsonData['feeds']; 
         
@@ -151,8 +151,8 @@ class MapsController extends Controller
             }else{
                 return ["result"=>"error"];
             }
-
         }
+        
         //Log all coordinates to the file system
         $this->logCoordinatesToFile();
     }
