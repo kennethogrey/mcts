@@ -2,7 +2,7 @@
 @section('title','Dashboard | Profile')
 @section('content')
 <x-app-layout>
-    <div class="pcoded-inner-content"> 
+    <div class="pcoded-inner-content">
         <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
             <div class="card-block d-flex justify-content-end">
                 <form method="POST" action="{{route('user.photo')}}" enctype="multipart/form-data">
@@ -21,7 +21,8 @@
                         <div class="col-sm-10">
                             <!-- Current Profile Photo -->
                             <div class="mt-2" x-show="! photoPreview">
-                                <img src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" alt="{{ auth()->user()->name }}" class="rounded-full h-20 w-20 object-cover">
+                                {{--  <img src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" alt="{{ auth()->user()->name }}" class="rounded-full h-20 w-20 object-cover">  --}}
+                                <img src="{{ auth()->user()->profile_photo_path ? asset('storage/profile_photo/' . auth()->user()->profile_photo_path) : asset('assets/images/avatar.png') }}" class="img-radius" style="width: 40px; height: 40px; border-radius: 50%;">
                             </div>
                         </div>
                     </div>

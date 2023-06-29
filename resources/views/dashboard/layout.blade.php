@@ -146,7 +146,7 @@
                                 @endif  --}}
                                 <li class="user-profile header-notification">
                                     <a class="waves-effect waves-light">
-                                        <img src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" class="img-radius" style="width: 40px; height: 40px; border-radius: 50%;">
+                                        <img src="{{ auth()->user()->profile_photo_path ? asset('storage/profile_photo/' . auth()->user()->profile_photo_path) : asset('assets/images/avatar.png') }}" class="img-radius" style="width: 40px; height: 40px; border-radius: 50%;">
                                         <span>{{ auth()->user()->name }}</span>
                                         <i class="ti-angle-down"></i>
                                     </a>
@@ -181,7 +181,7 @@
                             <div class="pcoded-inner-navbar main-menu">
                                 <div class="">
                                     <div class="main-menu-header">
-                                        <img class="img-80 img-radius" style="width: 60px; height: 60px; border-radius: 50%;" src="{{ asset('storage/profile_photo') }}/{{ auth()->user()->profile_photo_path }}" alt="{{ auth()->user()->name }}">
+                                        <img src="{{ auth()->user()->profile_photo_path ? asset('storage/profile_photo/' . auth()->user()->profile_photo_path) : asset('assets/images/avatar.png') }}" class="img-radius" style="width: 60px; height: 60px; border-radius: 50%;">
                                     </div>
                                 </div>
                                 {{--  <div class="p-15 p-b-0">
