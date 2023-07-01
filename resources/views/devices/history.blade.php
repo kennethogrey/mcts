@@ -15,15 +15,53 @@ crossorigin=""></script>
 @section('content')
 <div class="card">
     <div class="card-header">
-        <h5>Device Trip History</h5>
-        <div class="card-header-right">
-            <div class="p-15 p-b-0">
-                <div class="form-group form-primary">
-                    <input type="text" placeholder="Search: YYYY-MM-DD" wire:model.debounce.350ms="search" class="form-control">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Device Trip History</h5>
+            <div class="d-flex">
+                <div class="p-15 p-b-0">
+                    <div class="form-group form-primary">
+                        <select name="year" class="form-control">
+                            <option value="">Select Year</option>
+                            @php
+                                $currentYear = date('Y');
+                                $startYear = 2000; // Change this value as per your requirement
+                            @endphp
+                            @for ($year = $currentYear; $year >= $startYear; $year--)
+                                <option value="{{ $year }}">{{ $year }}</option>
+                            @endfor
+                        </select>
+                    </div>
                 </div>
+                <div class="p-15 p-b-0">
+                    <div class="form-group form-primary">
+                        <select name="month" class="form-control">
+                            <option value="">Select Month</option>
+                            @php
+                                $months = [
+                                    1 => 'January',
+                                    2 => 'February',
+                                    3 => 'March',
+                                    4 => 'April',
+                                    5 => 'May',
+                                    6 => 'June',
+                                    7 => 'July',
+                                    8 => 'August',
+                                    9 => 'September',
+                                    10 => 'October',
+                                    11 => 'November',
+                                    12 => 'December',
+                                ];
+                            @endphp
+                            @foreach ($months as $monthNumber => $monthName)
+                                <option value="{{ $monthNumber }}">{{ $monthName }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>                
             </div>
         </div>
     </div>
+    
     <div class="pcoded-inner-content">
         <div class="main-body">
             <div class="page-wrapper">
@@ -37,7 +75,7 @@ crossorigin=""></script>
                                 $files = glob($filePath . '*.txt');
                                 rsort($files); // Sort files in descending order
 
-                                $perPage = 3; // Number of files per page
+                                $perPage = 12; // Number of files per page
                                 $currentPage = request()->get('page', 1); // Get the current page number
                                 $totalFiles = count($files);
 
