@@ -137,7 +137,7 @@
                                                 Device Location
                                             </a>
                                         </td>
-                                        <td>{{ diffForHumans($device->updated_at) }}</td>
+                                        <td>{{ $device->updated_at }}</td>
                                         <td>
                                             @if($device->status == 1) 
                                                 <a class="btn waves-effect waves-light btn-success" href="//">

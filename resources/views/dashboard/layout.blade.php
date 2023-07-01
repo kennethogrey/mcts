@@ -195,15 +195,13 @@
                                 </div>  --}}
                                 <div class="pcoded-navigation-label">Navigation</div>
                                 <ul class="pcoded-item pcoded-left-item">
-                                    @if( auth()->user()->role == 2)
-                                        <li class="active">
-                                            <a href="{{ route('dashboard') }}" class="waves-effect waves-dark">
-                                                <span class="pcoded-micon"><i class="ti-home"></i></span>
-                                                <span class="pcoded-mtext">Dashboard</span>
-                                                <span class="pcoded-mcaret"></span>
-                                            </a>
-                                        </li>
-                                    @endif
+                                    <li class="active">
+                                        <a href="{{ route('dashboard') }}" class="waves-effect waves-dark">
+                                            <span class="pcoded-micon"><i class="ti-home"></i></span>
+                                            <span class="pcoded-mtext">Dashboard</span>
+                                            <span class="pcoded-mcaret"></span>
+                                        </a>
+                                    </li>
                                 </ul>
 
                                 @if( auth()->user()->role != 0 )

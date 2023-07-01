@@ -76,11 +76,13 @@ class DeviceController extends Controller
      */
     public function marker(Device $device)
     {
-        $id = $device->id;
+        $device = Device::where('user', auth()->user()->id)->pluck('id');
         $currentCoordinate = Location::with('coordinates')->get();
         //dd($currentCoordinate);
+        $geofences = GeoFence::all();
         return response()->json([
-            'currentCoordinate' => $currentCoordinate
+            'currentCoordinate' => $currentCoordinate,
+            'device' => $device
         ]);
     }
 

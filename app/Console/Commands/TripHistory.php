@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use App\Models\Location;
+use Illuminate\Support\Facades\Log;
 
 class TripHistory extends Command
 {
@@ -36,17 +37,19 @@ class TripHistory extends Command
         $nowDate = Carbon::now();
 
         //loop through all the time of the created_at column so the acquire new values every 24 hours
-        foreach($coord as $coord) 
-        {
-            $createdAt = $coord->created_at;
+        foreach($coord as $location) {
+            $createdAt = $location->created_at;
             $createdAt = Carbon::parse($createdAt);
-            if($nowDate->diffInHours($createdAt) >= 24)
-            {
-                Location::updateOrInsert(['id' => $coord->id],[
-                    "created_at"=> $nowDate
+        
+            if ($createdAt != null && $nowDate->diffInHours($createdAt) >= 24) {
+                Location::updateOrInsert(['id' => $location->id], [
+                    'created_at' => $nowDate
                 ]);
+            } else {
+                $location->created_at = $nowDate;
+                $location->save();
+                \Log::info('Now Date: ' . $nowDate);
             }
-            
         }
     }
 }

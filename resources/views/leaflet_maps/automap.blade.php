@@ -8,10 +8,10 @@
                 <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Status</th>
                 <th>latitude</th>
                 <th>longitude</th>
                 <th>Map</th>
+                <th>Geofence</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,11 +19,25 @@
                 <tr>
                     <td>{{ $device->id }}</td>
                     <td>{{ $device->name }}</td>
-                    <td>{{ $device->status }}</td>
                     <td>{{ $device->coordinates->latitude }}</td>
                     <td>{{ $device->coordinates->longitude }}</td>
                     <td>
-                        <div class="map-container" id="map-{{ $device->id }}" style="width: 400px; height: 200px;"></div>
+                        <div class="map-container" id="map-{{ $device->id }}" style="width: 500px; height: 300px;"></div>
+                    </td>
+                        @php
+                            $geofence = DB::table('geo_fences')->where('device_id', $device->id)->pluck('coordinates')->first();
+                            $coordinates_data = json_decode($geofence, true);
+                            if ($coordinates_data && isset($coordinates_data['geometry']['coordinates'])) {
+                                $coordinates = $coordinates_data['geometry']['coordinates'][0];
+                        @endphp
+                                <td>{{ json_encode($coordinates) }}</td>
+                        @php
+                            } else {
+                        @endphp
+                                <td>No Geofence</td>
+                        @php
+                            }
+                        @endphp
                     </td>
                 </tr>
                 @endforeach
@@ -32,22 +46,7 @@
     </div>
 </div>    
 @endsection
-
-@section('styles')
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-crossorigin=""/>
-@endsection
 @push('scripts')
-<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
-integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
-crossorigin=""></script>
-<!-- leaflet draw Plugin -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css"/>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
-<!-- Turf.js Libraries -->
-<script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
-
 <script>
     var device = {!! json_encode($device) !!};
     $(document).ready(function() {
@@ -58,9 +57,9 @@ crossorigin=""></script>
             var mapContainer = $(this).find('.map-container')[0];
 
             // Get the latitude and longitude for this device
-            var latitude = $(this).find('td:nth-child(4)').text();
-            var longitude = $(this).find('td:nth-child(5)').text();
-
+            var latitude = $(this).find('td:nth-child(3)').text();
+            var longitude = $(this).find('td:nth-child(4)').text();
+            var geofence = $(this).find('td:nth-child(6)').text();
             // Initialize the Leaflet map
             var map = L.map(mapContainer).setView([latitude, longitude], 13);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -73,7 +72,8 @@ crossorigin=""></script>
             var notify = 0;
             setInterval(function() {
                 $.getJSON('/marker', function(data) {
-                    var coordinates = data.currentCoordinate;    
+                    var coordinates = data.currentCoordinate;
+
                     var filteredCoordinates = coordinates.filter(obj => obj.device_id === deviceId);
                     if (filteredCoordinates.length > 0) {
                         latitude = filteredCoordinates[0].latitude;
@@ -87,34 +87,18 @@ crossorigin=""></script>
                     notify++;
 
                     //GeoFence Violation Check by turf.js
-                    var presentData = {!! json_encode($device->geofences->coordinates) !!}
-                    if(presentData !== null) {
-                        var myType = {!! $device->geofences->coordinates !!}
-                        type = myType.geometry.type
+                    if(geofence !== "No Geofence") {
                         // check if the point is within the polygon using turf.js library
                         coordinates = turf.point([longitude, latitude])
-                        jsonData = {!!$device->geofences->coordinates!!}
-                        poly = jsonData.geometry.coordinates[0]
-                        //console.log(poly)
-                        polygon = turf.polygon([poly])
+                        var jsonArray = JSON.parse(geofence);
+                        polygon = turf.polygon([jsonArray])
                         isInside = turf.booleanPointInPolygon(coordinates, polygon);
                         console.log(isInside)
-                        if(!isInside)
-                        {
-                            //delay notifications and SMS by 10 minutes(120 loops) to avoid overfloading email, every 5 seconds
-                            if(notify >= 1)
-                            {
-                                return;
-                            }else{
-                                notifications(filteredCoordinates);
-                            }
-                        }else{
-                            console.log("Device Still in Position")
-                        }
+                        
                     }else{
                         console.log("No geofence set")
                     }
-                    
+
                     if(counter <= 2)
                     {
                         // Update the map's view to center on the marker
@@ -178,7 +162,7 @@ crossorigin=""></script>
 
         // Fetching device location after every 1 second at thinkSpeak
         function fetchData() {
-            const url = 'https://api.thingspeak.com/channels/2160030/feeds.json?api_key=8X996CRIODRN4IK3&results=2';
+            const url = 'https://api.thingspeak.com/channels/2160030/feeds.json?api_key=8X996CRIODRN4IK3';
             
             fetch(url)
                 .then(response => response.json())
