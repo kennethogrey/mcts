@@ -20,7 +20,7 @@ crossorigin=""></script>
             <div class="d-flex">
                 <div class="p-15 p-b-0">
                     <div class="form-group form-primary">
-                        <select name="year" class="form-control">
+                        <select id="year" name="year" class="form-control">
                             <option value="">Select Year</option>
                             @php
                                 $currentYear = date('Y');
@@ -34,7 +34,7 @@ crossorigin=""></script>
                 </div>
                 <div class="p-15 p-b-0">
                     <div class="form-group form-primary">
-                        <select name="month" class="form-control">
+                        <select id="month" name="month" class="form-control">
                             <option value="">Select Month</option>
                             @php
                                 $months = [
@@ -57,7 +57,20 @@ crossorigin=""></script>
                             @endforeach
                         </select>
                     </div>
-                </div>                
+                </div>
+                <div class="p-15 p-b-0">
+                    <div class="form-group form-primary">
+                        <select id="day" name="day" class="form-control">
+                            <option value="">Select Day</option>
+                            @php
+                                $days = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31];
+                            @endphp
+                            @foreach ($days as $dayNumber)
+                                <option value="{{ $dayNumber }}">{{ $dayNumber }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>             
             </div>
         </div>
     </div>
@@ -120,7 +133,35 @@ crossorigin=""></script>
                                 </div>
                                 @push('scripts')
                                     <script>
+                                        function filterFiles() {
+                                            var selectedYear = $('select[name="year"]').val();
+                                            var selectedMonth = $('select[name="month"]').val();
+                                            var selectedDay = $('select[name="day"]').val();
+                                    
+                                            $('.col-lg-12.col-xl-4').each(function() {
+                                                var mapContainer = $(this);
+                                                var fileNameWithoutExt = mapContainer.find('.card-header h5').text().trim();
+                                                var fileDate = fileNameWithoutExt.split(' ')[0];
+                                    
+                                                if (
+                                                    (selectedYear === '' || fileDate.includes(selectedYear)) &&
+                                                    (selectedMonth === '' || fileDate.includes(selectedMonth))&&
+                                                    (selectedDay === '' || fileDate.includes(selectedDay))
+                                                ) {
+                                                    mapContainer.show();
+                                                } else {
+                                                    mapContainer.hide();
+                                                }
+                                            });
+                                        }
+                                    
                                         $(document).ready(function() {
+                                            filterFiles(); // Initial filtering
+                                    
+                                            $('select[name="year"], select[name="month"], select[name="day"]').change(function() {
+                                                filterFiles();
+                                            });
+                                    
                                         // Loop through each map container
                                         $('.set-map').each(function() {
                                             // Get the ID of the device associated with this map container
