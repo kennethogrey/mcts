@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Device;
 
 class User extends Authenticatable
 {
@@ -66,9 +67,9 @@ class User extends Authenticatable
     ];
 
     //1 user can have many devices
-    public function userDevice(): HasMany
+    public function userDevice()
     {
-        return $this->hasMany(Device::class);
+        return $this->hasMany(Device::class,'user');
     }
 
     public function scopeSearch($query, $term)

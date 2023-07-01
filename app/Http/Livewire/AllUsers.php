@@ -37,7 +37,7 @@ class AllUsers extends Component
                     $query->where('contact', $this->contact);
                 })
                 ->orderBy('created_at', 'desc')
-                ->paginate(5),
+                ->paginate(4),
         ]);
     }
 }

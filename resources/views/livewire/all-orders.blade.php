@@ -28,7 +28,7 @@
                             <th>Devices</th>
                             <th>Purpose</th>
                             <th>Date Created</th>
-                            <th>Status</th>
+                            {{--  <th>Status</th>  --}}
                             <th>Delete</th>
                         </tr>
                     </thead>
@@ -42,7 +42,7 @@
                                 <td>{{ $order->devices }}</td>
                                 <td>{{ $order->message }}</td>
                                 <td>{{ $order->created_at }}</td>
-                                <td>
+                                {{--  <td>
                                     @if($order->status == 1) 
                                         <a class="btn waves-effect waves-light btn-success" href="//">
                                             Serviced
@@ -52,7 +52,7 @@
                                             Not Serviced
                                         </a>
                                     @endif
-                                </td>
+                                </td>  --}}
                                 <td>
                                     <form method="POST" action="{{ route('order.destroy', $order->id) }}">
                                         @csrf

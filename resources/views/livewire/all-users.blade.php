@@ -32,6 +32,7 @@
                             <th>Contacts</th>
                             <th>Location</th>
                             <th>Role</th>
+                            <th>Devices</th>
                             <th>Date Created</th>
                             <th>Status</th>
                             <th>Edit</th>
@@ -42,12 +43,15 @@
                         @forelse($all_users as $user)
                             <tr>
                                 <th scope="row">{{ $user->id }}</th>
-                                <td><img src="{{ asset('storage/profile_photo')}}/{{$user->profile_photo_path }}" style="max-width: 70px" alt="avatar" /></td>
+                                <td>
+                                    <img src="{{ $user->profile_photo_path ? asset('storage/profile_photo/'.$user->profile_photo_path) : asset('assets/images/avatar.png') }}" class="img-radius" style="max-width: 60px; height: 60px; border-radius: 50%;">
+                                </td>                                                              
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->contact }}</td>
                                 <td>{{ $user->location }}</td>
                                 <td>@if($user->role == 1){{__('Normal User')}} @elseif($user->role == 2) {{__('Administrator')}} @else{{('No Role')}} @endif</td>
+                                <td>{{$user->userDevice()->count()}}</td>
                                 <td>{{ $user->created_at }}</td>
                                 <td>
                                     @if($user->status == 1) 
@@ -94,3 +98,4 @@
         </div>
     </div>
 </div>
+
