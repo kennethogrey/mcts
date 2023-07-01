@@ -49,7 +49,7 @@
             <li><a class="nav-link scrollto" href="#gallery">Gallery</a></li>
             <li><a class="nav-link scrollto" href="#team">Team</a></li>
             <li><a class="nav-link scrollto" href="#order">Order</a></li>
-            <li><a class="nav-link scrollto" href="https://bse23-10-blog.owekisa.org/">Blog</a></li>
+            <li><a class="nav-link scrollto" href="https://bse23-10-blog.owekisa.org/" target="_blank">Blog</a></li>
             <li><a class="nav-link scrollto" href="{{route('login')}}">Login</a></li>
             </ul>
             <i class="bi bi-list mobile-nav-toggle"></i>
@@ -101,7 +101,7 @@
 
     <div class="container">
       <div class="copyright">
-        Copyright  &copy;2022-{{ date('Y') }} <strong><span>CypherLink.Inc</span></strong>. All Rights Reserved
+        Copyright  &copy;2022-{{ date('Y') }} <strong><span>BSE23-10</span></strong>. All Rights Reserved
       </div>
     </div>
   </footer><!-- End Footer -->

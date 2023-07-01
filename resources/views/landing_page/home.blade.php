@@ -336,28 +336,62 @@
         </div>
 
         <div class="row" data-aos="fade-left">
-
-          @forelse($team_members as $admin)
-            <div class="col-lg-3 col-md-6">
-              <div class="member" data-aos="zoom-in" data-aos-delay="100">
-                <div class="pic" style="height: 400px;"><img src="{{ asset('storage/profile_photo')}}/{{$admin->profile_photo_path }}" class="img-fluid" alt="photo"></div>
-                <div class="member-info">
-                  <h4>{{ $admin->name }}</h4>
-                  <span>Administrator</span>
-                  <div class="social">
-                    <a href="//"><i class="bi bi-twitter"></i></a>
-                    <a href="//"><i class="bi bi-facebook"></i></a>
-                    <a href="//"><i class="bi bi-instagram"></i></a>
-                    <a href="//"><i class="bi bi-linkedin"></i></a>
-                  </div>
+          
+          <div class="col-lg-3 col-md-6">
+            <div class="member" data-aos="zoom-in" data-aos-delay="100">
+              <div class="pic" style="height: 400px;"><img src="{{asset('/assets/images/team/kenneth.jpg')}}" class="img-fluid" alt="photo"></div>
+              <div class="member-info">
+                <h4>Ogire Kenneth</h4>
+                <span>Administrator</span>
+                <div class="social">
+                  <a href='https://github.com/kennethogrey' target='_blank'><i class="bi bi-github"></i></a>
+                  <a href='https://www.linkedin.com/in/ogire-kenneth-68999a213' target='_blank'><i class="bi bi-linkedin"></i></a>
                 </div>
               </div>
             </div>
-            @empty
-              <div class="alert alert-Danger">
-                  {{ __('No Admin Available') }}
+          </div>
+
+          <div class="col-lg-3 col-md-6">
+            <div class="member" data-aos="zoom-in" data-aos-delay="100">
+              <div class="pic" style="height: 400px;"><img src="{{asset('/assets/images/team/samuel.jpg')}}" class="img-fluid" alt="photo"></div>
+              <div class="member-info">
+                <h4>Eluk Samuel Kiira</h4>
+                <span>Administrator</span>
+                <div class="social">
+                  <a href='https://github.com/Eluk-Samuel-Kiira' target='_blank'><i class="bi bi-github"></i></a>
+                  <a href='https://www.linkedin.com/in/samuel-kiira-eluk-070857222' target='_blank'><i class="bi bi-linkedin"></i></a>
+                </div>
               </div>
-            @endforelse
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6">
+            <div class="member" data-aos="zoom-in" data-aos-delay="100">
+              <div class="pic" style="height: 400px;"><img src="{{asset('/assets/images/team/elizabeth.jpg')}}" class="img-fluid" alt="photo"></div>
+              <div class="member-info">
+                <h4>Nanyonga Elizabeth</h4>
+                <span>Administrator</span>
+                <div class="social">
+                  <a href='#' target='_blank'><i class="bi bi-github"></i></a>
+                  <a href='#' target='_blank'><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-3 col-md-6">
+            <div class="member" data-aos="zoom-in" data-aos-delay="100">
+              <div class="pic" style="height: 400px;"><img src="{{asset('/assets/images/team/christian.jpg')}}" class="img-fluid" alt="photo"></div>
+              <div class="member-info">
+                <h4>Waniaye Christian Timothy</h4>
+                <span>Administrator</span>
+                <div class="social">
+                  <a href='#' target='_blank'><i class="bi bi-github"></i></a>
+                  <a href='#' target='_blank'><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div>
 

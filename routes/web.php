@@ -13,6 +13,7 @@ use App\Jobs\RunBladeFileJob;
 use App\Models\Device;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,16 +36,9 @@ Route::get('/', function () {
         'visits' => $increase, 'visited_time' => $visited_time, 'visited_date' => $visited_date,
         "created_at"=> Carbon::now(), "updated_at"=> now()
     ]);
-
-    // Team members
-    $team_members = User::where('role',2)->get();
-    return view('landing_page.home',compact('team_members'));
+    return view('landing_page.home');
 });
 Route::post('/device/order', [StatisticsController::class, 'device_order'])->name('make.order');
-
-
-
-
 
 //protected routes
 Route::middleware([

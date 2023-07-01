@@ -27,7 +27,7 @@ class MapsController extends Controller
         }
     }
 
-    public function trip_history($id)
+    public function trip_history(Request $request,$id)
     {
         //data to be retrieved from text file as devt proceeds
         $devices = Device::with('geofences','coordinates')->where('id', $id)->get();
