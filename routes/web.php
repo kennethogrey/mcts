@@ -82,7 +82,7 @@ Route::middleware([
     Route::post('/devices/location', [MapsController::class, 'updateDeviceCoordinates'])->name('device.location');
     Route::get('/map/file/{file}', [StatisticsController::class, 'fileMap'])->where('file', '.*')->name('map.file');
     //test route
-    //Route::get('/dev/location', [MapsController::class, 'testCoord'])->name('dev.location');
+    Route::get('/dev/location', [MapsController::class, 'updateDeviceCoordinates'])->name('dev.location');
 
     Route::get('/marker', [DeviceController::class, 'marker'])->name('current.marker');
     Route::delete('/delete/geofence/{id}', [MapsController::class, 'destroyGeofence']);

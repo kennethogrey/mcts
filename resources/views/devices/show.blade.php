@@ -236,7 +236,7 @@ crossorigin=""></script>
             function streetClick(e) {
                 popup
                     .setLatLng(e.latlng)
-                    .setContent("The current location of " +filteredCoordinates[0].coordinates.name+ " is " + e.latlng.toString())
+                    .setContent("The current location of " +filteredCoordinates[0].coordinates.name+ " is " + e.latlng.toString()+ " the place is called "+name)
                     .openOn(map2);
             }
 

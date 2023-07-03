@@ -140,7 +140,7 @@ class MapsController extends Controller
                 $client = new \Vonage\Client($basic);
                 //SMS notification
                 $response = $client->sms()->send(
-                    new \Vonage\SMS\Message\SMS(256781315904, 'MCTS', 'Hello '.$username.' Device '.$device.' needs serious attention, as the emergency button has been clicked.')
+                    new \Vonage\SMS\Message\SMS(256781315904, 'MCTS', 'Hello '.$username.' Device '.$device.' is out of the boundary you earlier spacified.')
                 );
 
                 //Update the sms numbers and return panic to 0 so as the incoming program knows the program that sent the sms last
@@ -184,7 +184,7 @@ class MapsController extends Controller
     public function updateDeviceCoordinates(Request $request)
     {
         $location_data = $request->input('device_location');
-        //$location_data = '{"channel":{"id":2160030,"name":"gps","latitude":"0.0","longitude":"0.0","field1":"device_id","field2":"latitude","field3":"longitude","field4":"time","field5":"date","field6":"alertStatus","created_at":"2023-05-23T12:27:28Z","updated_at":"2023-05-31T14:06:08Z","last_entry_id":149},"feeds":[{"created_at":"2023-05-31T15:03:01Z","entry_id":148,"field1":"3","field2":"0.33158982","field3":"32.57056000","field4":"18:1:39","field5":"31-5-2023","field6":"1"},{"created_at":"2023-05-31T15:04:33Z","entry_id":149,"field1":"1","field2":"0.33152222","field3":"32.5707777","field4":"18:3:11","field5":"31-5-2023","field6":"0"}]}';
+        //$location_data = '{"channel":{"id":2160030,"name":"gps","latitude":"0.0","longitude":"0.0","field1":"device_id","field2":"latitude","field3":"longitude","field4":"time","field5":"date","field6":"alertStatus","created_at":"2023-05-23T12:27:28Z","updated_at":"2023-05-31T14:06:08Z","last_entry_id":149},"feeds":[{"created_at":"2023-05-31T15:03:01Z","entry_id":148,"field1":"3","field2":"0.33158982","field3":"32.57056000","field4":"18:1:39","field5":"31-5-2023","field6":"0"},{"created_at":"2023-05-31T15:04:33Z","entry_id":149,"field1":"3","field2":"0.33152222","field3":"32.5707777","field4":"18:3:11","field5":"31-5-2023","field6":"0"}]}';
         $jsonData = json_decode($location_data, true);
         $start_id = Apis::where('id', 1)->pluck('last_entry')->first();
 
@@ -323,7 +323,7 @@ class MapsController extends Controller
             $time_now = Carbon::now();
             $sms_last_sent = SMSApi::where('device_id', $device_id)->value('updated_at');
 
-            if($time_now->diffInMinutes($sms_last_sent) >= 1)
+            if($time_now->diffInMinutes($sms_last_sent) >= 60)
             {
                 $device = Device::where('id', $device_id)->pluck('name')->first();
                 $user_id = Device::where('id', $device_id)->pluck('user')->first();
@@ -364,24 +364,4 @@ class MapsController extends Controller
         }
         return;   
     }
-
-    // public function testCoord()
-    // {
-    //     $jsonData = '{"channel":{"id":2160030,"name":"gps","latitude":"0.0","longitude":"0.0","field1":"device_id","field2":"latitude","field3":"longitude","field4":"time","field5":"date","field6":"alertStatus","created_at":"2023-05-23T12:27:28Z","updated_at":"2023-05-31T14:06:08Z","last_entry_id":149},"feeds":[{"created_at":"2023-05-31T15:03:01Z","entry_id":148,"field1":"3","field2":"0.33158982","field3":"32.57056000","field4":"18:1:39","field5":"31-5-2023","field6":"1"},{"created_at":"2023-05-31T15:04:33Z","entry_id":149,"field1":"1","field2":"0.33152222","field3":"32.5707777","field4":"18:3:11","field5":"31-5-2023","field6":"0"}]}';
-
-    //     $jsonData = json_decode($jsonData, true);
-    //     $feeds = $jsonData['feeds'];
-
-    //     for ($i = 0; $i < count($feeds); $i++) {
-    //         $entryId = $feeds[$i]['entry_id'];
-    //         $latitude = $feeds[$i]['field2'];
-    //         $longitude = $feeds[$i]['field3'];
-
-    //         if ($latitude !== '0.0000000' && $longitude !== '0.0000000') {
-    //             dd('go ahead');
-    //         } else {
-    //             dd('yes, they are 0.00000');
-    //         }
-    //     }
-    // }
 }
