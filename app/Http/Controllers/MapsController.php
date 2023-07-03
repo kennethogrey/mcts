@@ -7,6 +7,9 @@ use App\Models\Device;
 use App\Models\User;
 use App\Models\GeoFence;
 use App\Models\Location;
+use App\Models\Apis;
+use App\Models\SMSApi;
+use App\Models\EmailApi;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\OutGeoFence;
@@ -61,26 +64,56 @@ class MapsController extends Controller
     }
 
     public function sendNotification(Request $request)
-    {
+    {   
         $user_id = $request->input('user_id');
         $device_id = $request->input('device_id');
+        //$device_id = 5;
 
-        $user = User::where('id', $user_id)->first();
-        $username = User::where('id', $user_id)->pluck('name')->first();
-        $device = Device::where('id', $device_id)->pluck('name')->first();
-        $contact = $user->contact;
-        //Mail Notification
-        $geofenceViolated = [
-            'body' => 'Geo-Fence Violation Alert',
-            'message' => 'Device '.$device.' appears to be out of the designated area which you earlier specified.',
-            'url' => url('/'),
-            'thankyou' => 'Take heed and make every necessary actions. Thank You'
-        ];
-        Notification::sendNow($user, new OutGeoFence($geofenceViolated));
+        if(EmailApi::where('device_id', $device_id)->pluck('device_id')->first())
+        {
+            $time_now = Carbon::now();
+            $email_last_sent = EmailApi::where('device_id', $device_id)->value('updated_at');
 
-        return response()->json([
-            'message' => 'The message was sent Successfully'
-        ]);
+            //check whether the email was sent more than an hour ago so the program sends and remind the user again
+            if($time_now->diffInMinutes($email_last_sent) >= 60)
+            {
+                $user = User::where('id', $user_id)->first();
+                $username = User::where('id', $user_id)->pluck('name')->first();
+                $device = Device::where('id', $device_id)->pluck('name')->first();
+                $contact = $user->contact;
+                //Mail Notification
+                $geofenceViolated = [
+                    'body' => 'Geo-Fence Violation Alert',
+                    'message' => 'Device '.$device.' appears to be out of the designated area which you earlier specified.',
+                    'url' => url('/login'),
+                    'thankyou' => 'Take heed and make every necessary actions. Thank You'
+                ];
+                Notification::sendNow($user, new OutGeoFence($geofenceViolated));
+
+                //Update the email details
+                $email_number = EmailApi::where('device_id', $device_id)->value('email');
+                $email_number = $email_number+1;
+                EmailApi::updateOrInsert(['device_id' => $device_id],[
+                    "email"=> $email_number,
+                    "updated_at"=> $time_now
+                ]);
+            
+                return response()->json([
+                    'message' => 'The message(Email) was sent Successfully'
+                ]);
+            }else {
+                return response()->json([
+                    'message' => 'The message(Email) has already been sent'
+                ]);
+            }
+        }else {
+            EmailApi::create([
+                'device_id' => $device_id,
+                'email' => 0
+            ]);
+            // remember to overflow the notify counter from the blade files by atleast 4 ie (notify == 4) just for efficency
+        }
+        
 
     }
 
@@ -88,25 +121,62 @@ class MapsController extends Controller
     {
         $user_id = $request->input('user_id');
         $device_id = $request->input('device_id');
-        
-        $contact = User::where('id', $user_id)->pluck('contact')->first();
-        $username = User::where('id', $user_id)->pluck('name')->first();
-        $device = Device::where('id', $device_id)->pluck('name')->first();
-        
-        $basic  = new \Vonage\Client\Credentials\Basic("911329d3", "DXJ8rtoucOlcwkF9");
-        $client = new \Vonage\Client($basic);
-        //SMS notification
-        $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS(256754428612, 'MCTS', 'Hello '.$username.' Device '.$device.' appears to be out of the designated area(GeoFence) which you earlier specified.')
-        );
-        $message = $response->current();
-        if ($message->getStatus() == 0) {
-            return response()->json([
-                'message' => 'The message was Successfully sent'
+
+        if(SMSApi::where('device_id', $device_id)->pluck('device_id')->first())
+        {
+            $time_now = Carbon::now();
+            $sms_last_sent = SMSApi::where('device_id', $device_id)->value('updated_at');
+            $sms_panic = SMSApi::where('device_id', $device_id)->value('panic');
+
+            //send the sms if the last sms sent by panic button and still less than an hour ago
+            if($time_now->diffInMinutes($sms_last_sent) >= 60 || $sms_panic == 1)
+            {
+                $contact = User::where('id', $user_id)->pluck('contact')->first();
+                $username = User::where('id', $user_id)->pluck('name')->first();
+                $device = Device::where('id', $device_id)->pluck('name')->first();
+                
+                // Vonage SMS initialization
+                $basic  = new \Vonage\Client\Credentials\Basic("ebfa6caf", "ONvGW2LhSIpGBP7k");
+                $client = new \Vonage\Client($basic);
+                //SMS notification
+                $response = $client->sms()->send(
+                    new \Vonage\SMS\Message\SMS(256781315904, 'MCTS', 'Hello '.$username.' Device '.$device.' needs serious attention, as the emergency button has been clicked.')
+                );
+
+                //Update the sms numbers and return panic to 0 so as the incoming program knows the program that sent the sms last
+                $sms_number = SMSApi::where('device_id', $device_id)->value('sms');
+                $sms_number = $sms_number+1;
+                SMSApi::updateOrInsert(['device_id' => $device_id],[
+                    "sms"=> $sms_number,
+                    "updated_at"=> $time_now,
+                    "panic" => 0
+                ]);
+
+                //Api Response
+                $message = $response->current();
+                if ($message->getStatus() == 0) {
+                    return response()->json([
+                        'message' => 'The message(sms) was Successfully sent'
+                    ]);
+                } else {
+                    return response()->json([
+                        'message' => 'The message(sms) failed'
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'The message(sms) already sent'
+                ]);
+            }
+        }else {
+            // panic here is set to 1 so the next incoming invocation assumes the panic buuton was responsible and still sends the sms
+            SMSApi::create([
+                'device_id' => $device_id,
+                'sms' => 0,
+                'panic' => 1
             ]);
-        } else {
             return response()->json([
-                'message' => 'The message failed'
+                'message' => 'The message(sms) is being processed! Kindly wait'
             ]);
         }
     }
@@ -114,55 +184,74 @@ class MapsController extends Controller
     public function updateDeviceCoordinates(Request $request)
     {
         $location_data = $request->input('device_location');
-        //$location_data = '{"channel":{"id":2160030,"name":"gps","latitude":"0.0","longitude":"0.0","field1":"device_id","field2":"latitude","field3":"longitude","field4":"time","field5":"date","field6":"alertStatus","created_at":"2023-05-23T12:27:28Z","updated_at":"2023-05-31T14:06:08Z","last_entry_id":149},"feeds":[{"created_at":"2023-05-31T15:03:01Z","entry_id":148,"field1":"3","field2":"0.33158982","field3":"32.57056000","field4":"18:1:39","field5":"31-5-2023","field6":"1"},{"created_at":"2023-05-31T15:04:33Z","entry_id":149,"field1":"1","field2":"0.33158982","field3":"32.57056000","field4":"18:3:11","field5":"31-5-2023","field6":"0"}]}';
-        $thinkspeak_data = json_decode($location_data, true);
-        $feeds = $thinkspeak_data['feeds'];
-        $lastEntryId = $thinkspeak_data['channel']['last_entry_id'];
-        $this->updateLastEntry($lastEntryId); 
-        
+        //$location_data = '{"channel":{"id":2160030,"name":"gps","latitude":"0.0","longitude":"0.0","field1":"device_id","field2":"latitude","field3":"longitude","field4":"time","field5":"date","field6":"alertStatus","created_at":"2023-05-23T12:27:28Z","updated_at":"2023-05-31T14:06:08Z","last_entry_id":149},"feeds":[{"created_at":"2023-05-31T15:03:01Z","entry_id":148,"field1":"3","field2":"0.33158982","field3":"32.57056000","field4":"18:1:39","field5":"31-5-2023","field6":"1"},{"created_at":"2023-05-31T15:04:33Z","entry_id":149,"field1":"1","field2":"0.33152222","field3":"32.5707777","field4":"18:3:11","field5":"31-5-2023","field6":"0"}]}';
+        $jsonData = json_decode($location_data, true);
+        $start_id = Apis::where('id', 1)->pluck('last_entry')->first();
+
+        $feeds = $jsonData['feeds']; 
         for ($i = 0; $i < count($feeds); $i++) {
             $entryId = $feeds[$i]['entry_id'];
-            $device_id = $feeds[$i]['field1'];
             $latitude = $feeds[$i]['field2'];
             $longitude = $feeds[$i]['field3'];
-            $updated_at = $feeds[$i]['created_at'];
-            $time = $feeds[$i]['field4'];
-            $date = $feeds[$i]['field5'];
-            $alertStatus = $feeds[$i]['field6'];
 
-            //Date issues
-            $date = new \DateTime($updated_at);
-            $formattedDate = $date->format('Y-m-d H:i:s');
-            
-            //Update the various device locations
-            $result = Location::updateOrInsert(['device_id' => $device_id],[
-                'latitude'=> $latitude,
-                'longitude' => $longitude,
-                'updated_at' => $formattedDate,
-                'status' => $alertStatus,
-            ]);
-
-            // Check for the status of the button
-            if($alertStatus == 1)
-            {
-                $this->makeAlert($device_id);
-            }
-    
-            if($result){
-                return ["result"=>"success"];
-            }else{
-                return ["result"=>"error"];
-            }
-        }
+            // loop through the incoming coordinates and check if latitude and longitude are not 0.00000
+            if ($latitude !== '0.0000000' && $longitude !== '0.0000000') {
+                if($entryId >= $start_id)
+                {
+                    $device_id = $feeds[$i]['field1'];
+                    $updated_at = $feeds[$i]['created_at'];
+                    $time = $feeds[$i]['field4'];
+                    $date = $feeds[$i]['field5'];
+                    $alertStatus = $feeds[$i]['field6'];
         
+                    //Date issues
+                    $date = new \DateTime($updated_at);
+                    $formattedDate = $date->format('Y-m-d H:i:s');
+                    
+                    //Update the various device locations
+                    $result = Location::updateOrInsert(['device_id' => $device_id],[
+                        'latitude'=> $latitude,
+                        'longitude' => $longitude,
+                        'updated_at' => $formattedDate,
+                        'status' => $alertStatus,
+                    ]);
+        
+                    // Check for the status of the button
+                    if($alertStatus == 1)
+                    {
+                        $this->makeAlert($device_id);
+                    }
+                }else {
+                    // do nothing with the already used coordinates
+                }
+            } else {
+                    // do nothing with the already used coordinates
+            }
+
+    
+        }
+        //store the last entry id again
+        $last_entry_id = $jsonData['channel']['last_entry_id']; 
+        $this->lastEntryId($last_entry_id);
+
         //Log all coordinates to the file system
         $this->logCoordinatesToFile();
+
+        if($result){
+            return ["result"=>"success"];
+        }else{
+            return ["result"=>"error"];
+        }
     }
 
-    public function updateLastEntry($lastEntryId)
+    public function lastEntryId($last_entry_id)
     {
+        Apis::updateOrInsert(['id' => 1],[
+            "last_entry"=> $last_entry_id
+        ]);
         return;
     }
+
 
     public function logCoordinatesToFile()
     {
@@ -228,18 +317,71 @@ class MapsController extends Controller
 
     public function makeAlert($device_id)
     {
-        $device = Device::where('id', $device_id)->pluck('name')->first();
-        $user_id = Device::where('id', $device_id)->pluck('user')->first();
-        $contact = User::where('id', $user_id)->pluck('contact')->first();
-        $username = User::where('id', $user_id)->pluck('name')->first();
+        //$device_id = 3;
+        if(SMSApi::where('device_id', $device_id)->pluck('device_id')->first())
+        {
+            $time_now = Carbon::now();
+            $sms_last_sent = SMSApi::where('device_id', $device_id)->value('updated_at');
 
-        // //SMS API
-        $basic  = new \Vonage\Client\Credentials\Basic("911329d3", "DXJ8rtoucOlcwkF9");
-        $client = new \Vonage\Client($basic);
-        //SMS notification
-        $response = $client->sms()->send(
-            new \Vonage\SMS\Message\SMS(256754428612, 'MCTS', 'Hello '.$username.' Device '.$device.' needs serious attention, as the emergency button has been clicked.')
-        );
+            if($time_now->diffInMinutes($sms_last_sent) >= 1)
+            {
+                $device = Device::where('id', $device_id)->pluck('name')->first();
+                $user_id = Device::where('id', $device_id)->pluck('user')->first();
+                $contact = User::where('id', $user_id)->pluck('contact')->first();
+                $username = User::where('id', $user_id)->pluck('name')->first();
+        
+                //SMS API
+                $basic  = new \Vonage\Client\Credentials\Basic("ebfa6caf", "ONvGW2LhSIpGBP7k");
+                $client = new \Vonage\Client($basic);
+                //SMS notification
+                $response = $client->sms()->send(
+                    new \Vonage\SMS\Message\SMS(256781315904, 'MCTS', 'Hello '.$username.' Device '.$device.' needs serious attention, as the emergency button has been clicked.')
+                );
+                
+                // $message = $response->current();
+                
+                // if ($message->getStatus() == 0) {
+                //     echo "The message was sent successfully\n";
+                // } else {
+                //     echo "The message failed with status: " . $message->getStatus() . "\n";
+                // }
+
+                //Update sms details
+                    $sms_number = SMSApi::where('device_id', $device_id)->value('sms');
+                    $sms_number = $sms_number+1;
+                    SMSApi::updateOrInsert(['device_id' => $device_id],[
+                        "sms"=> $sms_number,
+                        "updated_at"=> $time_now,
+                        "panic" => 1
+                    ]);
+                }
+        }else {
+            SMSApi::create([
+                'device_id' => $device_id,
+                'sms' => 0
+            ]);
+            $this->makeAlert();
+        }
         return;   
     }
+
+    // public function testCoord()
+    // {
+    //     $jsonData = '{"channel":{"id":2160030,"name":"gps","latitude":"0.0","longitude":"0.0","field1":"device_id","field2":"latitude","field3":"longitude","field4":"time","field5":"date","field6":"alertStatus","created_at":"2023-05-23T12:27:28Z","updated_at":"2023-05-31T14:06:08Z","last_entry_id":149},"feeds":[{"created_at":"2023-05-31T15:03:01Z","entry_id":148,"field1":"3","field2":"0.33158982","field3":"32.57056000","field4":"18:1:39","field5":"31-5-2023","field6":"1"},{"created_at":"2023-05-31T15:04:33Z","entry_id":149,"field1":"1","field2":"0.33152222","field3":"32.5707777","field4":"18:3:11","field5":"31-5-2023","field6":"0"}]}';
+
+    //     $jsonData = json_decode($jsonData, true);
+    //     $feeds = $jsonData['feeds'];
+
+    //     for ($i = 0; $i < count($feeds); $i++) {
+    //         $entryId = $feeds[$i]['entry_id'];
+    //         $latitude = $feeds[$i]['field2'];
+    //         $longitude = $feeds[$i]['field3'];
+
+    //         if ($latitude !== '0.0000000' && $longitude !== '0.0000000') {
+    //             dd('go ahead');
+    //         } else {
+    //             dd('yes, they are 0.00000');
+    //         }
+    //     }
+    // }
 }

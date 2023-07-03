@@ -241,10 +241,9 @@ crossorigin=""></script>
             }
 
             //GeoFence Violation Check by turf.js
+            var coordinates,jsonData,poly,polygon,isInside;
             var presentData = {!! json_encode($geofence) !!}
             if(presentData !== null) {
-                var myType = {!! $geofence !!}
-                type = myType.geometry.type
                 // check if the point is within the polygon using turf.js library
                 coordinates = turf.point([longitude, latitude])
                 jsonData = {!!$geofence!!}
@@ -256,7 +255,7 @@ crossorigin=""></script>
                 if(!isInside)
                 {
                     //delay notifications and SMS by 10 minutes(120 loops) to avoid overfloading email, every 5 seconds
-                    if(notify >= 2)
+                    if(notify >= 4)
                     {
                         return;
                     }else{
@@ -269,7 +268,7 @@ crossorigin=""></script>
                 console.log("No geofence set")
             }
             
-            if(counter <= 2)
+            if(counter <= 3)
             {
                 // Update the map's view to center on the marker
                 map.setView([latitude, longitude], 13);

@@ -94,6 +94,18 @@
                         polygon = turf.polygon([jsonArray])
                         isInside = turf.booleanPointInPolygon(coordinates, polygon);
                         console.log(isInside)
+                        if(!isInside)
+                        {
+                            //delay notifications and SMS by 10 minutes(120 loops) to avoid overfloading email, every 5 seconds
+                            if(notify >= 4)
+                            {
+                                return;
+                            }else{
+                                notifications(filteredCoordinates);
+                            }
+                        }else{
+                            console.log("Device Still in Position")
+                        }
                         
                     }else{
                         console.log("No geofence set")
@@ -160,7 +172,7 @@
 
         });
 
-        // Fetching device location after every 1 second at thinkSpeak
+        // Fetching device location after every 1 second from thinkSpeak
         function fetchData() {
             const url = 'https://api.thingspeak.com/channels/2160030/feeds.json?api_key=8X996CRIODRN4IK3';
             

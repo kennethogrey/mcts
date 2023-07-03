@@ -22,7 +22,6 @@
                     </div>
                 </div>
             </div>
-            </div>
             <div class="card-block table-border-style">
                 <div class="table-responsive">
                     <table class="table table-hover">
