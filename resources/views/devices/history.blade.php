@@ -82,7 +82,7 @@ crossorigin=""></script>
                 <div class="page-body">
                     
                     <div class="row">
-                    @forelse($devices as $device)
+                        @forelse($devices as $device)
                             @php
                                 $filePath = storage_path('app/public/TripHistories/'.$device->user.'/'.$device->id.'/');
                                 $files = glob($filePath . '*.txt');
@@ -194,9 +194,12 @@ crossorigin=""></script>
                                                     }
                                                 }
                                             }
-                                            var roadLine = L.polyline(latlngs, {color: 'green', snakingSpeed: 200}).addTo(map);
-                                            roadLine.snakeIn();
-                                            //console.log(latlngs)
+                                            if(latlngs.length > 1)
+                                            {
+                                                var roadLine = L.polyline(latlngs, {color: 'green', snakingSpeed: 200}).addTo(map);
+                                                roadLine.snakeIn();
+                                                //console.log(latlngs)
+                                            }
                                         });
                                     });
                                     </script>

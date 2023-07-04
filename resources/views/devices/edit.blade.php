@@ -31,7 +31,7 @@
                                 <input type="text" class="form-control" name="name" value="{{ $device->name }}">
                             </div>
                         </div>    
-                        <div class="form-group row">
+                        {{--  <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Select User</label>
                             <div class="col-sm-10">
                                 <select name="user" class="form-control" required>
@@ -41,7 +41,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div>  --}}
                         <button type="submit" class="btn waves-effect waves-light btn-primary"><i class="icofont icofont-user-alt-3"></i> Submit</button>
                     </form>
                 </div>

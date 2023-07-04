@@ -61,6 +61,7 @@ crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
 integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
 crossorigin=""></script>
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 <!-- Snake animation plugin -->
 <script src="{{asset('assets/js/L.Polyline.SnakeAnim.js')}}"></script>
 
@@ -78,8 +79,10 @@ crossorigin=""></script>
         let fileContents = @json(file_get_contents($file));
         let lines = fileContents.split('\n');
 
+        var color_counter = 0;
         var latlngs = [];
         for (let line of lines) {
+            color_counter++;
             if (line.trim() !== '') { //eliminate empty lines
                 let data = JSON.parse(line);
                 if (data) {
@@ -91,14 +94,63 @@ crossorigin=""></script>
                         if (!latlngs.some(arr => arr[0] === latitude && arr[1] === longitude)) {
                             var marker = L.marker([latitude, longitude]).addTo(map);
                             latlngs.push([latitude, longitude]);
+
+                            if(color_counter == 1)
+                            {
+                                // Create a green icon for the marker
+                                var greenIcon = L.icon({
+                                    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                                    iconSize: [25, 41],
+                                    iconAnchor: [12, 41],
+                                    popupAnchor: [1, -34],
+                                    shadowSize: [41, 41]
+                                });
+                                marker.setIcon(greenIcon);
+                            }
+                            if(color_counter == lines.length-1)
+                            {
+                                // Create a green icon for the marker
+                                var redIcon = L.icon({
+                                    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                                    iconSize: [25, 41],
+                                    iconAnchor: [12, 41],
+                                    popupAnchor: [1, -34],
+                                    shadowSize: [41, 41]
+                                });
+                                marker.setIcon(redIcon);
+                            }
+
+                            marker.on('click', mapClick);
+                            var pop = L.popup();
+
+                            function mapClick(e) {
+                                var latlng = e.latlng;
+                                var geocoder = L.Control.Geocoder.nominatim();
+                                geocoder.reverse(latlng, map.options.crs.scale(map.getZoom()), function(results) {
+                                    if (results.length > 0) {
+                                        var name = results[0].name;
+                                        pop
+                                            .setLatLng(e.latlng)
+                                            .setContent("This location "  +
+                                                " is at " + e.latlng.toString() + ", the place is called " + name)
+                                            .openOn(map);
+                                    }
+                                });
+                            }
                         }
                     }
                 }
             }
         }
-        var roadLine = L.polyline(latlngs, {color: 'green', snakingSpeed: 200}).addTo(map);
-        roadLine.snakeIn();
-        //console.log(latlngs)
+
+        if(latlngs.length > 1)
+        {
+            var roadLine = L.polyline(latlngs, {color: 'green', snakingSpeed: 200}).addTo(map);
+            roadLine.snakeIn();
+            //console.log(latlngs)
+        }
     });
 </script>
 @endpush

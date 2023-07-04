@@ -47,6 +47,12 @@ class DeviceController extends Controller
         $deviceTable->name = $request->device_name;
         $deviceTable->user = $request->device_user;
         $deviceTable->save();
+        $device_id = Device::latest()->pluck('id')->first();
+        Location::create([
+            'device_id' => $device_id,
+            'latitude'=> '0.34762300',
+            'longitude' => '32.58252300',
+        ]);
         return redirect()->route('device.index')->with('status','New Device Registered Successfully');
     }
 
@@ -65,7 +71,7 @@ class DeviceController extends Controller
         //Geofences
         $geofence = GeoFence::where('device_id',$id)->pluck('coordinates')->first();
         return view('devices.show',compact('device','timeNow','geofence'));
-        
+
     }
 
     /**
@@ -109,7 +115,7 @@ class DeviceController extends Controller
     {
         $device->update($request->validated());
         $device->name = $request->input('name');
-        $device->user = $request->input('user');
+        //$device->user = $request->input('user');
         return redirect()->route('device.index')->with('status', 'The Device\'s Details Has Been Updated Successfully');
     }
 
