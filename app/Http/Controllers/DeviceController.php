@@ -31,7 +31,7 @@ class DeviceController extends Controller
      */
     public function create()
     {
-        $users = User::where('role',1)->get();
+        $users = User::where('role',1)->orderBy('created_at','desc')->get();
         return view('devices.create',compact('users'));
     }
 

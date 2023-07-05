@@ -119,6 +119,12 @@
                             </a>
                         </div>
                         <div class="navbar-container container-fluid">
+                            <ul class="nav-left mt-3 ml-3">
+                                <a href="{{ url()->previous() }}">
+                                    <i class="fa fa-arrow-circle-o-left text-white"></i>
+                                    <span class="text-white">Back</span>
+                                </a>
+                            </ul>
                             <ul class="nav-right">
                                 {{--  @if( auth()->user()->role == 2)
                                     <li class="header-notification">
