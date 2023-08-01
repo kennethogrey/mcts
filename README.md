@@ -7,7 +7,7 @@ This guide will walk you through the process of setting up the web application b
 3. Composer is installed globally, and Laravel is optional.
 ## Steps
 1. Clone the project repository into your web server's htdocs folder. Open the terminal in that directory and run the following command:
-`git@gitlab.cranecloud.io:2023-SE4/bse23-10.git`
+`https://github.com/kennethogrey/mcts.git`
 2. Change into the project directory: `cd bse23-10`
 3. Install composer dependencies `composer install`
 4. Install npm dependences `npm install`
